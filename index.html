@@ -1,29 +1,56 @@
 <!doctype html>
 <html>
-    <head>
-        <script src="dragThrow.js"></script>
-        <style>
-            div {
-                height: 40px;
-                width: 40px;
-                background: #2aa;
-                border-radius: 20px;
-            }
-            body {
-                height: 100%;
-                width: 100%;
-                background: #ffa;
-            }
-        </style>
-        
-        
-    </head>
-    <body>
-        <div id="thrower"></div>
-    </body>
-    <script>
-        var dt = new dragThrow();
-        dt.init({targetObject: document.getElementById('thrower'),eventObject: document.body/*, decay:0.8, moveX:true, moveY:true, onlyTarget:true*/});
-        
-    </script>
+	<head>
+		<script src="dragThrow.js"></script>
+		<style>
+			.thrower {
+				height: 40px;
+				width: 40px;
+				background: #2aa;
+				border-radius: 20px;
+				position: absolute;
+			}
+			.smallw {width:5px;}
+			.smallh {height: 5px;}
+			.panner {
+				height: 800px;
+				width: 800px;
+			}
+			.eventer {
+				height: 500px;
+				width: 500px;
+				background: #ffa;
+				position: relative;
+				display: inline-block;
+			}
+			
+			#eventer2{
+				position: relative;
+			}
+		</style>
+		
+		
+	</head>
+	<body>
+		<div id="eventer" class="eventer">
+			<div class="thrower smallw" id="thrower1"></div>
+			<div class="thrower smallh" id="thrower2"></div>
+			<div class="thrower" id="thrower3"></div>
+		</div>
+		<!-- <div class="eventer" id="eventer2">
+			<div class="panner thrower" id="panner"></div>
+		</div> -->
+	</body>
+	<script>
+		var dt = new dragThrow();
+		dt.init({targetObject: document.getElementById('thrower1'),eventObject: document.getElementById('eventer'), decay: 0.9, moveX:false, moveY:true, onlyTarget:false});
+		var dt = new dragThrow();
+		dt.init({targetObject: document.getElementById('thrower2'),eventObject: document.getElementById('eventer'), decay: 0.9, moveX:true, moveY:false, onlyTarget:false});
+		var dt = new dragThrow();
+		dt.init({targetObject: document.getElementById('thrower3'),eventObject: document.getElementById('eventer'), decay: 0.9, moveX:true, moveY:true, onlyTarget:false});
+
+		//var dt = new dragThrow();
+		//dt.init({targetObject: document.getElementById('panner'),eventObject: document.getElementById('eventer2'), decay: 0.9, moveX:true, moveY:true, onlyTarget:false});
+		
+	</script>
 </html>
