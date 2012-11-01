@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="dragThrow.js"></script>
+        <style>
+            div {
+                height: 40px;
+                width: 40px;
+                background: #2aa;
+                border-radius: 20px;
+            }
+            body {
+                height: 100%;
+                width: 100%;
+                background: #ffa;
+            }
+        </style>
+        
+        
+    </head>
+    <body>
+        <div id="thrower"></div>
+    </body>
+    <script>
+        var dt = new dragThrow();
+        dt.init({targetObject: document.getElementById('thrower'),eventObject: document.body/*, decay:0.8, moveX:true, moveY:true, onlyTarget:true*/});
+        
+    </script>
+</html>
