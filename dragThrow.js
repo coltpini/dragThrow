@@ -49,23 +49,25 @@ var dragThrow = function(){
 
 		this.moveIt = function(e){
 			if(!this.onlyTarget) overTarget=true;
-
 			if(buttonDown && overTarget){
 				buttonDown = true;
 				mouseDragged = true;
-				mouseCurrX = e.offsetX;
-				mouseCurrY = e.offsetY;
+				mouseCurrX = /*e.offsetX ||*/ e.clientX;
+				mouseCurrY = /*e.offsetY ||*/  e.clientY;
 				arMousePrevX = mousePrevX;
 				arMousePrevY = mousePrevY;
 
 
-				var topper = (e.offsetY - mousePrevY) + this.targetObject.offsetTop;// - (this.targetObject.offsetTop - e.offsetY);
-				var sider = (e.offsetX - mousePrevX) + this.targetObject.offsetLeft;// - (this.targetObject.offsetLeft - e.offsetX);
-				//console.log("topper: " + topper,"mousePrvY: " + mousePrevY, "math: " + (e.offsetY - mousePrevY), "top: " + this.targetObject.offsetTop, "offsetY: " + e.offsetY, "math: " + (this.targetObject.offsetTop - e.offsetY));
+
+
+				var topper = (mouseCurrY - mousePrevY) + this.targetObject.offsetTop;// - (this.targetObject.offsetTop - e.offsetY);
+				var sider = (mouseCurrX - mousePrevX) + this.targetObject.offsetLeft;// - (this.targetObject.offsetLeft - e.offsetX);
+				//console.log("topper: " + topper,"mousePrvY: " + mousePrevY, "math: " + (mouseCurrY - mousePrevY), "top: " + this.targetObject.offsetTop, "offsetY: " + mouseCurrY, "math: " + (this.targetObject.offsetTop - mouseCurrY));
 
 
 				if(this.moveY)this.targetObject.style.top = topper + "px";
 				if(this.moveX)this.targetObject.style.left = sider + "px";
+
 
 				decay = this.originalDecay;
 			}
@@ -74,8 +76,8 @@ var dragThrow = function(){
 				if(!this.onlyTarget)
 					overTarget = false;
 			}
-			mousePrevX = e.offsetX;
-			mousePrevY = e.offsetY;
+			mousePrevX = mouseCurrX;
+			mousePrevY = mouseCurrY;
 
 			if(this.targetObject.offsetWidth > this.eventObject.offsetWidth)
 				xOppositeEdge = true;
