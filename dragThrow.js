@@ -10,6 +10,7 @@ var dragThrow = function(){
 		this.xOppositeEdge = false;
 		this.yOppositeEdge = false;
 		this.percentage = 1;
+		this.doZoom = true;
 
 		this.handleOverTarget = function(e){
 			e.preventDefault();
@@ -24,6 +25,7 @@ var dragThrow = function(){
 		};
 		this.moveIt = function(e){
 			e.preventDefault();
+console.log("hello");
 			if(!this.onlyTarget) overTarget=true;
 			if(buttonDown && overTarget){
 				buttonDown = true;
@@ -66,35 +68,49 @@ var dragThrow = function(){
 			this.yOppositeEdge = this.targetObject.offsetHeight > this.eventObject.offsetHeight;
 		};
 		this.touchZoom =  function(touches,onMove){
-			if(touches.length > 1){
-				var d = Math.sqrt(Math.pow(mouseCurrY - touches.item(1).clientY,2) + Math.pow(mouseCurrX - touches.item(1).clientX, 2)),
-					dDiff = (d - prevD) * (this.targetObject.offsetHeight / 100),
-					xPoint = touches.item(0).clientX - this.eventObject.offsetLeft - this.targetObject.offsetLeft,
-					yPoint = touches.item(0).clientY - this.eventObject.offsetTop - this.targetObject.offsetTop;
+			console.log("hello");
+			if(this.doZoom){
+				if(touches.length > 1){
+					var d = Math.sqrt(Math.pow(mouseCurrY - touches.item(1).clientY,2) + Math.pow(mouseCurrX - touches.item(1).clientX, 2)),
+						dDiff = (d - prevD) * (this.targetObject.offsetHeight / 100),
+						xPoint = e.touches.item(0).clientX - this.eventObject.offsetLeft - this.targetObject.offsetLeft,
+						yPoint = e.touches.item(0).clientY - this.eventObject.offsetTop - this.targetObject.offsetTop;
 
-				if(onMove){
-					this.zoom(xPoint, yPoint, dDiff);
+					if(onMove){
+						this.zoom(xPoint, yPoint, dDiff);
+					}
+
+					this.checkSize();
+					prevD = d;
+
 				}
-
-				this.checkSize();
-				prevD = d;
-
 			}
 		};
 		this.mouseZoom = function(e){
-			e.preventDefault();
-			e.stopPropagation();
-			e = e ? e : window.event;
-			var wheelData = Math.ceil((e.detail ? e.detail * -1 : e.wheelDelta / 40) * 10),
+			if(this.doZoom){
+				e.preventDefault();
+				e.stopPropagation();
+				e = e ? e : window.event;
+				var wheelData = Math.ceil((e.detail ? e.detail * -1 : e.wheelDelta / 40) * 20),
 				xPoint = e.clientX - this.eventObject.offsetLeft - this.targetObject.offsetLeft,
 				yPoint = e.clientY - this.eventObject.offsetTop - this.targetObject.offsetTop;
 
-			this.zoom(xPoint, yPoint, wheelData);
+				this.zoom(xPoint, yPoint, wheelData);
+			}
 		};
-		this.zoom = function(xPoint, yPoint, change){
+		this.zoom = function(xP, yP, change){
+			change = Math.ceil(change * 10) / 10;
+			var cH = this.targetObject.offsetHeight,
+				cW = this.targetObject.offsetWidth;
+
+console.log("prev",(this.targetObject.offsetHeight + change));
+
 			if((scrollIt === "tooFarUp" && change < 0) || (scrollIt === "tooFarDown" && change > 0)){
 				scrollIt = "scroll";
 			}
+
+			HP = yP / this.targetObject.offsetHeight;
+			WP = xP / this.targetObject.offsetWidth;
 
 			if(this.targetObject.offsetHeight > this.targetObject.naturalHeight * 2 && scrollIt === "scroll"){
 				this.targetObject.style.height = (this.targetObject.naturalHeight * 2) + "px";
@@ -105,15 +121,18 @@ var dragThrow = function(){
 				scrollIt = "tooFarDown";
 			}
 			else if(scrollIt === "scroll"){
-				this.targetObject.style.height = Math.ceil(this.targetObject.offsetHeight + change) + "px";
+				this.targetObject.style.height = (this.targetObject.offsetHeight + change) + "px";
 			}
 			else
 				change = 0;
 
 			this.targetObject.style.width = (this.targetObject.offsetHeight * (this.targetObject.naturalWidth / this.targetObject.naturalHeight)) + "px";
-			this.targetObject.style.top = (this.targetObject.offsetTop - (change * (yPoint / this.targetObject.offsetHeight))) + "px";
-			this.targetObject.style.left = (this.targetObject.offsetLeft - (change * (xPoint / this.targetObject.offsetWidth))) + "px";
 
+			cH = this.targetObject.offsetHeight - cH;
+			cW = this.targetObject.offsetWidth - cW;
+
+			this.targetObject.style.top = (this.targetObject.offsetTop - (cH * HP )) + "px";
+			this.targetObject.style.left = (this.targetObject.offsetLeft - (cW * WP)) + "px";
 
 			this.checkSize();
 			this.percentage = 1;
@@ -228,7 +247,6 @@ var dragThrow = function(){
 				}
 			}
 		};
-
 	};
 	dragThrow.prototype.init = function (args){
 		this.targetObject = args.targetObject;
@@ -246,6 +264,7 @@ var dragThrow = function(){
 		this.moveX = typeof(args.moveX) !== "undefined" ? args.moveX : true;
 		this.moveY = typeof(args.moveY) !== "undefined" ? args.moveY : true;
 		this.onlyTarget = typeof(args.onlyTarget) !== "undefined" ? args.onlyTarget : true;
+		this.doZoom = typeof(args.doZoom) !== "undefined" ? args.doZoom : true;
 		this.start();
 	};
 	dragThrow.prototype.start = function(){
