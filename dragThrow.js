@@ -71,8 +71,10 @@ var dragThrow = function(){
 				if(touches.length > 1){
 					var d = Math.sqrt(Math.pow(mouseCurrY - touches.item(1).clientY,2) + Math.pow(mouseCurrX - touches.item(1).clientX, 2)),
 						dDiff = (d - prevD) * (this.targetObject.offsetHeight / 100),
-						xPoint = touches.item(0).clientX - this.eventObject.offsetLeft - this.targetObject.offsetLeft,
-						yPoint = touches.item(0).clientY - this.eventObject.offsetTop - this.targetObject.offsetTop;
+						clientX = touches.item(0).clientX - ((touches.item(0).clientX - touches.item(1).clientX)/2),
+						clientY = touches.item(0).clientY - ((touches.item(0).clientY - touches.item(1).clientY)/2), 
+						xPoint = clientX - this.eventObject.offsetLeft - this.targetObject.offsetLeft,
+						yPoint = clientY - this.eventObject.offsetTop - this.targetObject.offsetTop;
 
 					if(onMove){
 						this.zoom(xPoint, yPoint, dDiff);
