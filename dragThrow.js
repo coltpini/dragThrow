@@ -311,7 +311,7 @@ var dragThrow = function(){
 			return function () {
 			   return func.apply(thisValue, arguments);
 		   }
-	   	}
+	   	};
 	}
 	dragThrow.prototype.stop = function(){
 		this.eventObject.removeEventListener("mousedown", this.handleOverTarget,false);
