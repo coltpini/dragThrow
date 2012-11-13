@@ -1,5 +1,5 @@
 var dragThrow = function(){
-		var mouseDragged = false,mousePrevX = 0,mousePrevY = 0,arMousePrevX = 0,arMousePrevY = 0,mouseCurrX = 0,mouseCurrY = 0,decay,gravity,buttonDown = false,overTarget = false,ant,timerInterval = 100,ainterval = 5,prevDiff = 0,peak = 3,prevD = 0, scrollIt = "scroll";
+		var mouseDragged = false,mousePrevX = 0,mousePrevY = 0,arMousePrevX = 0,arMousePrevY = 0,mouseCurrX = 0,mouseCurrY = 0,decay,gravity,buttonDown = false,overTarget = false,ant,timerInterval = 100,ainterval = 5,prevDiff = 0,peak = 3,prevD = 0, scrollIt = "scroll", inZoom = false;
 		this.targetObject = undefined;
 		this.eventObject = undefined;
 		this.originalGravity = 0;
@@ -11,6 +11,8 @@ var dragThrow = function(){
 		this.yOppositeEdge = false;
 		this.percentage = 1;
 		this.doZoom = true;
+		this.minPercent = 0.2;
+		this.maxPercent = 2;
 
 		this.handleOverTarget = function(e){
 			e.preventDefault();
@@ -46,8 +48,10 @@ var dragThrow = function(){
 				if(this.moveY)this.targetObject.style.top = topper + "px";
 				if(this.moveX)this.targetObject.style.left = sider + "px";
 
-				this.findEdgeY(0);
-				this.findEdgeX(0);
+				if(!inZoom){
+					this.findEdgeY(0);
+					this.findEdgeX(0);
+				}
 
 				decay = this.originalDecay;
 				gravity = this.originalGravity;
@@ -72,7 +76,7 @@ var dragThrow = function(){
 					var d = Math.sqrt(Math.pow(mouseCurrY - touches.item(1).clientY,2) + Math.pow(mouseCurrX - touches.item(1).clientX, 2)),
 						dDiff = (d - prevD) * (this.targetObject.offsetHeight / 100),
 						clientX = touches.item(0).clientX - ((touches.item(0).clientX - touches.item(1).clientX)/2),
-						clientY = touches.item(0).clientY - ((touches.item(0).clientY - touches.item(1).clientY)/2), 
+						clientY = touches.item(0).clientY - ((touches.item(0).clientY - touches.item(1).clientY)/2),
 						xPoint = clientX - this.eventObject.offsetLeft - this.targetObject.offsetLeft,
 						yPoint = clientY - this.eventObject.offsetTop - this.targetObject.offsetTop;
 
@@ -82,7 +86,10 @@ var dragThrow = function(){
 
 					this.checkSize();
 					prevD = d;
-
+					inZoom = true;
+				}
+				else{
+					inZoom = false
 				}
 			}
 		};
@@ -110,12 +117,12 @@ var dragThrow = function(){
 			HP = yP / this.targetObject.offsetHeight;
 			WP = xP / this.targetObject.offsetWidth;
 
-			if(this.targetObject.offsetHeight > this.targetObject.naturalHeight * 2 && scrollIt === "scroll"){
-				this.targetObject.style.height = (this.targetObject.naturalHeight * 2) + "px";
+			if(this.targetObject.offsetHeight > this.targetObject.naturalHeight * this.maxPercent && scrollIt === "scroll"){
+				this.targetObject.style.height = (this.targetObject.naturalHeight * this.maxPercent) + "px";
 				scrollIt = "tooFarUp";
 			}
-			else if(this.targetObject.offsetHeight < this.targetObject.naturalHeight * 0.2 && scrollIt) {
-				this.targetObject.style.height = (this.targetObject.naturalHeight * 0.2) + "px";
+			else if(this.targetObject.offsetHeight < this.targetObject.naturalHeight * this.minPercent && scrollIt) {
+				this.targetObject.style.height = (this.targetObject.naturalHeight * this.minPercent) + "px";
 				scrollIt = "tooFarDown";
 			}
 			else if(scrollIt === "scroll"){
@@ -257,12 +264,15 @@ var dragThrow = function(){
 			this.targetObject.naturalWidth = img.width;
 		}
 
+
 		this.originalDecay = typeof(args.decay) !== "undefined" ? args.decay : 0.8;
 		this.originalGravity = typeof(args.gravity) !== "undefined" ? args.gravity : 0;
 		this.moveX = typeof(args.moveX) !== "undefined" ? args.moveX : true;
 		this.moveY = typeof(args.moveY) !== "undefined" ? args.moveY : true;
 		this.onlyTarget = typeof(args.onlyTarget) !== "undefined" ? args.onlyTarget : true;
 		this.doZoom = typeof(args.doZoom) !== "undefined" ? args.doZoom : true;
+		this.minPercent = typeof(args.minPercent) !== "undefined" ? args.minPercent : 0.2;
+		this.maxPercent = typeof(args.maxPercent) !== "undefined" ? args.maxPercent : 2;
 		this.start();
 	};
 	dragThrow.prototype.start = function(){
@@ -281,21 +291,28 @@ var dragThrow = function(){
 			this.eventObject.addEventListener("mousewheel", this.mouseZoom.bind(this), false);
 		}
 		else if(this.eventObject.attachEvent){
-			this.eventObject.attachEvent("onmousewheel", this.mouseZoom);
-			this.eventObject.attachEvent("mousedown", this.handleOverTarget.bind(this));
-			this.eventObject.attachEvent("onmousemove", this.moveIt.bind(this));
-			document.attachEvent("onmouseup", this.throwIt.bind(this));
-			this.eventObject.attachEvent("ontouchstart", this.handleOverTarget.bind(this));
-			this.eventObject.attachEvent("ontouchend", this.throwIt.bind(this));
-			this.eventObject.attachEvent("ontouchmove", this.moveIt.bind(this));
-			this.targetObject.attachEvent("onmousedown", this.handleOverTarget.bind(this));
-			this.targetObject.attachEvent("ontouchstart", this.handleOverTarget.bind(this));
+			this.eventObject.attachEvent("onmousewheel", this.bind(this.mouseZoom,this));
+			this.eventObject.attachEvent("mousedown", this.bind(this.handleOverTarget, this));
+			this.eventObject.attachEvent("onmousemove", this.bind(this.moveIt, this));
+			document.attachEvent("onmouseup", this.bind(this.throwIt, this));
+			this.eventObject.attachEvent("ontouchstart", this.bind(this.handleOverTarget,this));
+			this.eventObject.attachEvent("ontouchend", this.bind(this.throwIt,this));
+			this.eventObject.attachEvent("ontouchmove", this.bind(this.moveIt,this));
+			this.targetObject.attachEvent("onmousedown", this.bind(this.handleOverTarget, this));
+			this.targetObject.attachEvent("ontouchstart", this.bind(this.handleOverTarget,this));
 		}
 
 	};
 	dragThrow.prototype.percentageZoom = function(perc){
 
 	};
+	if(typeof(function(){}).bind === "undefined"){
+		this.prototype.bind = function (func, thisValue) {
+			return function () {
+			   return func.apply(thisValue, arguments);
+		   }
+	   	}
+	}
 	dragThrow.prototype.stop = function(){
 		this.eventObject.removeEventListener("mousedown", this.handleOverTarget,false);
 		this.eventObject.removeEventListener("mousemove", this.moveIt.false);

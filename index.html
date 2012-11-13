@@ -4,14 +4,14 @@
 		<script src="dragThrow.js"></script>
 		<style>
 			#thrower {
-				height: 40px;
-				width: 40px;
+				height: 80px;
+				width: 80px;
 				background: #2aa;
-				border-radius: 20px;
+				border-radius: 40px;
 				position: absolute;
 			}
 			#panner {
-				height: 800px;
+				width: 100%;
 				position: absolute;
 			}
 			.eventer {
@@ -56,7 +56,7 @@
 		dt.init({targetObject: document.getElementById('thrower'),eventObject: document.getElementById('eventer'), decay: 1, moveX:true, moveY:true, gravity:0.5, onlyTarget:true, doZoom:false});
 
 		var dtPan = new dragThrow();
-		dtPan.init({targetObject: document.getElementById('panner'),eventObject: document.getElementById('eventer2'), decay: 0.8, moveX:true, moveY:true, onlyTarget:false});
+		dtPan.init({targetObject: document.getElementById('panner'),eventObject: document.getElementById('eventer2'), decay: 0.8, moveX:true, moveY:true, onlyTarget:false, maxPercent: 8, minPercent: 0.1});
 
 		var dtScroll = new dragThrow();
 		dtScroll.init({targetObject: document.getElementById('scroller'),eventObject: document.getElementById('eventer3'), decay: 0.85, moveX:false, moveY:true, onlyTarget:false, doZoom:false});
