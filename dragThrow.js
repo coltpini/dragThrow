@@ -307,7 +307,7 @@ var dragThrow = function(){
 
 	};
 	if(typeof(function(){}).bind === "undefined"){
-		this.prototype.bind = function (func, thisValue) {
+		dragThrow.prototype.bind = function (func, thisValue) {
 			return function () {
 			   return func.apply(thisValue, arguments);
 		   }
