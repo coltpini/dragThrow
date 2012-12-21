@@ -315,7 +315,7 @@ var dragThrow = function(){
 	}
 	dragThrow.prototype.stop = function(){
 		this.eventObject.removeEventListener("mousedown", this.handleOverTarget,false);
-		this.eventObject.removeEventListener("mousemove", this.moveIt.false);
+		this.eventObject.removeEventListener("mousemove", this.moveIt,false);
 		document.removeEventListener("mouseup", this.throwIt);
 		this.eventObject.removeEventListener("touchstart", this.handleOverTarget,false);
 		this.eventObject.removeEventListener("touchend", this.throwIt,false);
