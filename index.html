@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<script src="dragThrow.js"></script>
+		<script src="dragThrow-min.js"></script>
 		<style>
 			#thrower {
 				height: 80px;
@@ -34,32 +34,32 @@
 
 	</head>
 	<body>
-		<div id="eventer" class="eventer">
+		<!-- <div id="eventer" class="eventer">
 
 			<div id="thrower"></div>
 
-		</div>
+		</div> -->
 		<div class="eventer" id="eventer2">
 			<img id="panner" src="http://www.coltpini.com/wp-content/uploads/2010/01/pini-11.jpg" />
 		</div>
-		<div class="eventer" id="eventer3">
+		<!-- <div class="eventer" id="eventer3">
 			<div id="scroller">
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mi eros, egestas rhoncus auctor non, dictum ut lorem. Morbi varius quam faucibus felis semper placerat. Praesent nunc justo, aliquet id lacinia vel, pharetra quis mi. Quisque in leo nibh, scelerisque molestie sapien. Maecenas sit amet sodales diam. Nullam luctus venenatis neque, gravida placerat nisl dictum quis. In hac habitasse platea dictumst. Quisque tincidunt, urna eu pharetra ornare, neque dolor mollis enim, non imperdiet ligula tellus id lacus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean blandit condimentum augue, vitae fermentum arcu consequat in. Nam venenatis mi sit amet augue fringilla facilisis. Proin sed ligula id arcu convallis sagittis.</p>
 				<p>Mauris nunc velit, ullamcorper id aliquet pellentesque, porttitor eleifend erat. Aliquam erat volutpat. Nunc pretium, dolor id pretium sodales, purus odio ultrices tortor, at facilisis magna urna nec leo. Praesent magna lacus, fringilla at aliquet ac, fringilla quis velit. Donec sodales, diam eu gravida pulvinar, lectus arcu facilisis nisi, in semper tellus sem ac orci. Fusce laoreet, sem pretium sagittis tristique, mauris augue eleifend enim, a tincidunt libero nunc sit amet justo. Aliquam vel massa quam. Duis hendrerit, nisi in sollicitudin consectetur, leo diam condimentum leo, in feugiat sem sem id odio. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis erat diam, varius at semper vel, laoreet sed leo. Ut id felis nunc, et adipiscing lectus. Quisque vitae tempor orci. Sed mi turpis, mollis non pellentesque eget, hendrerit at sapien. Fusce felis odio, elementum nec eleifend vel, egestas ullamcorper urna. Pellentesque libero quam, dapibus a tincidunt nec, tincidunt et nisl.</p>
 				<p>Morbi velit sem, elementum non sodales gravida, egestas ac massa. Sed at quam neque. Maecenas bibendum arcu ipsum, in sodales turpis. Donec et nunc non tellus venenatis tincidunt. Sed quis dictum arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras augue nibh, consectetur non vestibulum id, pellentesque vel massa. Nulla adipiscing hendrerit adipiscing. Duis vitae dolor elit. Aliquam erat volutpat. Curabitur quis accumsan risus. Donec laoreet nulla in metus facilisis ornare. Ut nec dui erat, nec tempus velit.</p>
 				<p>Morbi sed sagittis elit. Fusce viverra nulla pellentesque orci malesuada quis luctus lorem ornare. Phasellus rutrum lacinia tellus, vitae tincidunt turpis dignissim nec. In hac habitasse platea dictumst. Morbi sit amet sapien vitae justo iaculis consequat et nec arcu. Nunc at risus massa, a pretium magna. Donec tempor augue at sem venenatis lobortis. Praesent congue faucibus leo non pellentesque. Nunc placerat vehicula enim, non fringilla nisi tempus a. Vestibulum vitae nisi eros, eu commodo est. Vestibulum quam ligula, mattis sed scelerisque in, dictum id magna. Suspendisse potenti.</p>
 			</div>
-		</div>
+		</div> -->
 	</body>
 	<script>
-		var dt = new dragThrow();
+		/*var dt = new dragThrow();
 		dt.init({targetObject: document.getElementById('thrower'),eventObject: document.getElementById('eventer'), decay: 1, moveX:true, moveY:true, gravity:0.5, onlyTarget:true, doZoom:false});
+*/
+		var dtPan = new dragThrow(fw("#eventer2"),fw('#panner'));
 
-		var dtPan = new dragThrow();
-		dtPan.init({targetObject: document.getElementById('panner'),eventObject: document.getElementById('eventer2'), decay: 0.8, moveX:true, moveY:true, onlyTarget:false, maxPercent: 8, minPercent: 0.1});
 
-		var dtScroll = new dragThrow();
+		/*var dtScroll = new dragThrow();
 		dtScroll.init({targetObject: document.getElementById('scroller'),eventObject: document.getElementById('eventer3'), decay: 0.85, moveX:false, moveY:true, onlyTarget:false, doZoom:false});
-
+*/
 	</script>
 </html>
