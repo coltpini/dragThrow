@@ -11,7 +11,6 @@ var dragThrow = function(eventObject, targetObject, args){
 	this.targetWidth = 0;
 	this.targetTop = 0;
 	this.targetLeft = 0;
-	this.targetRect = {};
 
 	if(this.targetObject.nodeName.toLowerCase() === "img" && typeof(this.targetObject.naturalHeight) === "undefined"){
 		//IE support
@@ -66,13 +65,13 @@ dragThrow.prototype.setpoints = function(e){
 	this.targetLeft = this.targetObject.offsetLeft;
 	this.targetHeight = this.targetObject.offsetHeight;
 	this.targetWidth = this.targetObject.offsetWidth;
+
 };
 
 dragThrow.prototype.movement = function(e){
 	fw.stopCancel(e);
 	if(this.mouseDown){
 		pos = fw.pointerPosition(e);
-		this.targetRect = this.targetObject.getBoundingClientRect();
 		this.x = pos.x - this.eventObject.offsetLeft;
 		this.y = pos.y - this.eventObject.offsetTop;
 		this.targetObject.style.top = (this.y - this.targetPointerTop) + "px";
@@ -100,7 +99,7 @@ dragThrow.prototype.mouseZoom = function(e){
 	fw.stopCancel(e);
 	var md = fw.mouseWheel(e),
 		p = md.y,
-		h =  (this.targetObject.offsetHeight +p*20);
+		h = this.targetObject.offsetHeight + (this.targetObject.offsetHeight * p/4);
 
 	this.zoom(h);
 };
