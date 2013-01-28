@@ -72,8 +72,8 @@ dragThrow.prototype.movement = function(e){
 	fw.stopCancel(e);
 	if(this.mouseDown){
 		pos = fw.pointerPosition(e);
-		this.x = pos.x - this.eventObject.offsetLeft;
-		this.y = pos.y - this.eventObject.offsetTop;
+		this.x = pos.x;
+		this.y = pos.y;
 		this.targetObject.style.top = (this.y - this.targetPointerTop) + "px";
 		this.targetObject.style.left = (this.x - this.targetPointerLeft) + "px";
 		if(pos.points && pos.points.length > 1)
