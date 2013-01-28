@@ -14,10 +14,8 @@ var dragThrow = function(eventObject, targetObject, args){
 	this.targetTop = 0;
 	this.targetLeft = 0;
 	this.targetRect = {};
-	this.prevHeight = this.targetObject.offsetHeight;
-	this.prevWidth = this.targetObject.offsetWidth;
 
-	if(this.targetObject.nodeName.toLowerCase() == "img" && typeof(this.targetObject.naturalHeight) === "undefined"){
+	if(this.targetObject.nodeName.toLowerCase() === "img" && typeof(this.targetObject.naturalHeight) === "undefined"){
 		//IE support
 		var img = new Image();
 		img.src = this.targetObject.src;
@@ -37,7 +35,6 @@ dragThrow.prototype.start = function(){
 	this.eventObject.addListener("touchend", this.upHandler, false, this);
 	this.eventObject.addListener("touchmove", this.movement, false, this);
 
-	//zoom
 	this.eventObject.addListener('DOMMouseScroll', this.mouseZoom, false, this);
 	this.eventObject.addListener("mousewheel", this.mouseZoom, false, this);
 
@@ -95,48 +92,37 @@ dragThrow.prototype.movement = function(e){
 };
 
 dragThrow.prototype.touchZoom =  function(touches,onMove){
-
 	var a = pos.points[0].x - pos.points[1].x,
 		b = pos.points[0].y - pos.points[1].y,
 		c = Math.sqrt(Math.pow(a,2) + Math.pow(b, 2)),
 		p = Math.round((c/this.zoomStart ) * 100),
-		h = this.targetHeight * (p/100),
-		w = h / this.ratio,
-		dH = h - this.targetHeight,
-		pT = this.targetHeight / this.targetPointerTop,
-		pW = this.targetWidth / this.targetPointerLeft,
-		t = this.targetTop - (dH / pT),
-		dW = w - this.targetWidth,
-		l = this.targetLeft - (dW / pW);
+		h = this.targetHeight * (p/100);
 
-		this.prevHeight = h;
-		this.prevWidth = w;
+	this.zoom(e,h);
+};
+
+dragThrow.prototype.mouseZoom = function(e){
+	var md = fw.mouseWheel(e),
+		p = md.y,
+		h =  (this.targetObject.offsetHeight +p*20);
+
+	this.zoom(e,h);
+};
+
+dragThrow.prototype.zoom = function(e,h){
+	fw.stopCancel(e);
+	if(h > this.targetObject.naturalHeight * 0.2 && h < this.targetObject.naturalHeight * 1.5){
+		var w = h / this.ratio,
+			dH = h - this.targetHeight,
+			pT = this.targetHeight / this.targetPointerTop,
+			pW = this.targetWidth / this.targetPointerLeft,
+			t = this.targetTop - (dH / pT),
+			dW = w - this.targetWidth,
+			l = this.targetLeft - (dW / pW);
 
 		this.targetObject.style.height = h + "px";
 		this.targetObject.style.width = w + "px";
 		this.targetObject.style.top = t + "px";
 		this.targetObject.style.left = l + "px";
-};
-
-dragThrow.prototype.mouseZoom = function(e){
-	fw.stopCancel(e);
-	var md = fw.mouseWheel(e),
-
-	p = md.y,
-	h =  (this.targetObject.offsetHeight +p*20),
-	w = h / this.ratio,
-	dH = h - this.targetHeight,
-	pT = this.targetHeight / this.targetPointerTop,
-	pW = this.targetWidth / this.targetPointerLeft,
-	t = this.targetTop - (dH / pT),
-	dW = w - this.targetWidth,
-	l = this.targetLeft - (dW / pW);
-
-	this.prevHeight = h;
-	this.prevWidth = w;
-
-	this.targetObject.style.height = h + "px";
-	this.targetObject.style.width = w + "px";
-	this.targetObject.style.top = t + "px";
-	this.targetObject.style.left = l + "px";
+	}
 };
