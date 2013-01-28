@@ -1,5 +1,3 @@
-//@codekit-prepend "fw.js";
-
 var dragThrow = function(eventObject, targetObject, args){
 	this.targetObject = targetObject;
 	this.eventObject = eventObject;
@@ -42,14 +40,7 @@ dragThrow.prototype.start = function(){
 
 dragThrow.prototype.downHandler = function(e){
 	fw.stopCancel(e);
-	this.ratio = this.targetObject.naturalHeight / this.targetObject.naturalWidth;
-	pos = fw.pointerPosition(e);
-	this.targetPointerTop = pos.y - this.targetObject.offsetTop;
-	this.targetPointerLeft = pos.x - this.targetObject.offsetLeft;
-	this.targetTop = this.targetObject.offsetTop;
-	this.targetLeft = this.targetObject.offsetLeft;
-	this.targetHeight = this.targetObject.offsetHeight;
-	this.targetWidth = this.targetObject.offsetWidth;
+	this.setpoints(e);
 
 	if(pos.points && pos.points.length > 1){
 		//a^2 + b^2 = c^2
@@ -66,6 +57,17 @@ dragThrow.prototype.upHandler = function(e){
 	this.mouseDown = false;
 };
 
+dragThrow.prototype.setpoints = function(e){
+	this.ratio = this.targetObject.naturalHeight / this.targetObject.naturalWidth;
+	pos = fw.pointerPosition(e);
+	this.targetPointerTop = pos.y - this.targetObject.offsetTop;
+	this.targetPointerLeft = pos.x - this.targetObject.offsetLeft;
+	this.targetTop = this.targetObject.offsetTop;
+	this.targetLeft = this.targetObject.offsetLeft;
+	this.targetHeight = this.targetObject.offsetHeight;
+	this.targetWidth = this.targetObject.offsetWidth;
+};
+
 dragThrow.prototype.movement = function(e){
 	fw.stopCancel(e);
 	if(this.mouseDown){
@@ -80,14 +82,7 @@ dragThrow.prototype.movement = function(e){
 	}
 	else if (!e.touches){
 		this.targetHeight = this.targetObject.offsetHeight;
-		this.ratio = this.targetObject.naturalHeight / this.targetObject.naturalWidth;
-		pos = fw.pointerPosition(e);
-		this.targetPointerTop = pos.y - this.targetObject.offsetTop;
-		this.targetPointerLeft = pos.x - this.targetObject.offsetLeft;
-		this.targetTop = this.targetObject.offsetTop;
-		this.targetLeft = this.targetObject.offsetLeft;
-		this.targetHeight = this.targetObject.offsetHeight;
-		this.targetWidth = this.targetObject.offsetWidth;
+		this.setpoints(e);
 	}
 };
 
@@ -98,19 +93,19 @@ dragThrow.prototype.touchZoom =  function(touches,onMove){
 		p = Math.round((c/this.zoomStart ) * 100),
 		h = this.targetHeight * (p/100);
 
-	this.zoom(e,h);
+	this.zoom(h);
 };
 
 dragThrow.prototype.mouseZoom = function(e){
+	fw.stopCancel(e);
 	var md = fw.mouseWheel(e),
 		p = md.y,
 		h =  (this.targetObject.offsetHeight +p*20);
 
-	this.zoom(e,h);
+	this.zoom(h);
 };
 
-dragThrow.prototype.zoom = function(e,h){
-	fw.stopCancel(e);
+dragThrow.prototype.zoom = function(h){
 	if(h > this.targetObject.naturalHeight * 0.2 && h < this.targetObject.naturalHeight * 1.5){
 		var w = h / this.ratio,
 			dH = h - this.targetHeight,
