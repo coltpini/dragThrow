@@ -27,6 +27,7 @@ dragThrow.prototype.start = function(){
 	this.eventObject.addListener('mousemove', this.movement,false,this);
 	this.eventObject.addListener('mousedown', this.downHandler,false,this);
 	this.eventObject.addListener('mouseup', this.upHandler,false,this);
+	this.eventObject.addListener('mouseleave', this.upHandler,false,this);
 
 	this.eventObject.addListener("touchstart", this.downHandler, false, this);
 	this.eventObject.addListener("touchend", this.upHandler, false, this);
