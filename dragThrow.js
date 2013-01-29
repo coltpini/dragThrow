@@ -58,9 +58,10 @@ dragThrow.prototype.upHandler = function(e){
 
 dragThrow.prototype.setpoints = function(e){
 	this.ratio = this.targetObject.naturalHeight / this.targetObject.naturalWidth;
-	pos = fw.pointerPosition(e);
+	pos = fw.pointerOffset(e);
 	this.targetPointerTop = pos.y - this.targetObject.offsetTop;
 	this.targetPointerLeft = pos.x - this.targetObject.offsetLeft;
+	console.log(this.targetPointerTop, pos.y, this.targetObject.offsetTop,this.eventObject.offsetTop);
 	this.targetTop = this.targetObject.offsetTop;
 	this.targetLeft = this.targetObject.offsetLeft;
 	this.targetHeight = this.targetObject.offsetHeight;
@@ -71,7 +72,7 @@ dragThrow.prototype.setpoints = function(e){
 dragThrow.prototype.movement = function(e){
 	fw.stopCancel(e);
 	if(this.mouseDown){
-		pos = fw.pointerPosition(e);
+		pos = fw.pointerOffset(e);
 		this.x = pos.x;
 		this.y = pos.y;
 		this.targetObject.style.top = (this.y - this.targetPointerTop) + "px";
