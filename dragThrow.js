@@ -61,7 +61,6 @@ dragThrow.prototype.setpoints = function(e){
 	pos = fw.pointerOffset(e);
 	this.targetPointerTop = pos.y - this.targetObject.offsetTop;
 	this.targetPointerLeft = pos.x - this.targetObject.offsetLeft;
-	console.log(this.targetPointerTop, pos.y, this.targetObject.offsetTop,this.eventObject.offsetTop);
 	this.targetTop = this.targetObject.offsetTop;
 	this.targetLeft = this.targetObject.offsetLeft;
 	this.targetHeight = this.targetObject.offsetHeight;
